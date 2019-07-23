@@ -14,11 +14,11 @@ roplsplot(d, plottype = "score", xvar, yvar, hotelling = FALSE,
 
 \item{xvar}{which component to plot on the x-axis. Must refer to a single component ("p1") or orthogonal ("o1") component present in the supplied ropls object.}
 
+\item{yvar}{which component to plot on the y-axis. Must refer to a single component ("p1") or orthogonal ("o1") component present in the supplied ropls object.}
+
 \item{hotelling}{If set to TRUE, will add Hotelling's T2 ellipse to the plot.}
 
 \item{ellipse}{If set to TRUE, will add an ellipse around the groups supplied in the model. Does not work for PCA, PLS and OPLS models.}
-
-\item{xvar}{which component to plot on the y-axis. Must refer to a single component ("p1") or orthogonal ("o1") component present in the supplied ropls object.}
 
 \item{groups}{A numeric grouping (OPLS) or two groups to be used for
 supervised analysis (OPLS-DA), ignored in other methods.}
@@ -27,7 +27,7 @@ supervised analysis (OPLS-DA), ignored in other methods.}
 ignored in other methods.}
 }
 \description{
-roplsplot produces publication-quality ggplot images of ropls objects.
+`roplsplot`` produces publication-quality ggplot images of ropls objects.
 The functions automatically determines the model type ("PCA", "PLS", "OPLS","PLS-DA","OPLS-DA") from the ropls object.
 The components shown in the plot are flexible and determined by the xvar and yvar parameters.
 }

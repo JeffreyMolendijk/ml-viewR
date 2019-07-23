@@ -7,18 +7,18 @@
 gg_circle(rx, ry, xc, yc, color = "black", fill = NA, ...)
 }
 \arguments{
-\item{rx}{paramater.}
+\item{rx}{parameter.}
 
-\item{ry}{paramater.}
+\item{ry}{parameter.}
 
-\item{xc}{paramater.}
+\item{xc}{parameter.}
 
-\item{yc}{paramater.}
+\item{yc}{parameter.}
 
-\item{color}{paramater.}
+\item{color}{parameter.}
 
-\item{fill}{paramater.}
+\item{fill}{parameter.}
 }
 \description{
-gg_circle produces circles and ellipses that can be added to ggplot images.
+`gg_circle`` produces circles and ellipses that can be added to ggplot images.
 }

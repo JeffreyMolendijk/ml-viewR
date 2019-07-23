@@ -1,13 +1,13 @@
 #' Function to add circles and ellipses to ggplot images.
 #'
-#' gg_circle produces circles and ellipses that can be added to ggplot images.
+#' `gg_circle`` produces circles and ellipses that can be added to ggplot images.
 #'
-#' @param rx paramater.
-#' @param ry paramater.
-#' @param xc paramater.
-#' @param yc paramater.
-#' @param color paramater.
-#' @param fill paramater.
+#' @param rx parameter.
+#' @param ry parameter.
+#' @param xc parameter.
+#' @param yc parameter.
+#' @param color parameter.
+#' @param fill parameter.
 #'
 #' @return a circle.
 #'   }
@@ -101,7 +101,4 @@ ropls.modelcompare <- function(...){
 
 }
 
-ropls.modelcompare(ropls.oplsda)
-
-ropls.oplsda@modelDF["p1","R2Y"]
 
