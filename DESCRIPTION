@@ -1,0 +1,14 @@
+Package: mlviewer
+Title: Machine learning viewer
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Jeffrey",
+           family = "Molendijk",
+           role = c("aut", "cre"),
+           email = "firstlast@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: 'mlviewer' is a visualization package for machine learning analyses. 'mlviewer' currently supports models from the ropls package (PCA, PLS, OPLS, PLS-DA, OPLS-DA), allowing the user to produce publication quality plots in a single line.
+License: What license it uses
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
