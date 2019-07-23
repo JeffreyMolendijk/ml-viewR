@@ -31,14 +31,8 @@ gg_circle <- function(rx, ry, xc, yc, color="black", fill=NA, ...) {
 #' @param plottype Which type of plot to produce. Options include scores (default), loadings and metrics.
 #' @param xvar which component to plot on the x-axis. Must refer to a single component ("p1") or orthogonal ("o1") component present in the supplied ropls object.
 #' @param yvar which component to plot on the y-axis. Must refer to a single component ("p1") or orthogonal ("o1") component present in the supplied ropls object.
-#'
 #' @param hotelling If set to TRUE, will add Hotelling's T2 ellipse to the plot.
 #' @param ellipse If set to TRUE, will add an ellipse around the groups supplied in the model. Does not work for PCA, PLS and OPLS models.
-#'
-#' @param groups A numeric grouping (OPLS) or two groups to be used for
-#'   supervised analysis (OPLS-DA), ignored in other methods.
-#' @param ... Extra arguments to be passed to [opls()] for OPLS-DA,
-#'   ignored in other methods.
 #'
 #' @return A ggplot object of the specified type.
 #'   }
