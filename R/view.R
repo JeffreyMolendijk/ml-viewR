@@ -23,7 +23,7 @@ gg_circle <- function(rx, ry, xc, yc, color="black", fill=NA, ...) {
 
 #' Produce publication-quality ggplot images of ropls objects.
 #'
-#' `roplsplot`` produces publication-quality ggplot images of ropls objects.
+#' `ropls.plot`` produces publication-quality ggplot images of ropls objects.
 #' The functions automatically determines the model type ("PCA", "PLS", "OPLS","PLS-DA","OPLS-DA") from the ropls object.
 #' The components shown in the plot are flexible and determined by the xvar and yvar parameters.
 #'
@@ -33,6 +33,7 @@ gg_circle <- function(rx, ry, xc, yc, color="black", fill=NA, ...) {
 #' @param yvar which component to plot on the y-axis. Must refer to a single component ("p1") or orthogonal ("o1") component present in the supplied ropls object.
 #' @param hotelling If set to TRUE, will add Hotelling's T2 ellipse to the plot.
 #' @param ellipse If set to TRUE, will add an ellipse around the groups supplied in the model. Does not work for PCA, PLS and OPLS models.
+#' @param col.var Vector of categorical or numerical values used to colour the variables of the loading plot.
 #'
 #' @return A ggplot object of the specified type.
 #'   }
@@ -41,7 +42,7 @@ gg_circle <- function(rx, ry, xc, yc, color="black", fill=NA, ...) {
 #' @import ggplot2
 #'
 #' @export
-roplsplot <- function(d, plottype = "score", xvar, yvar, hotelling = FALSE, ellipse = FALSE){
+ropls.plot <- function(d, plottype = "score", xvar, yvar, hotelling = FALSE, ellipse = FALSE, col.var = NULL){
   N <- nrow(d@scoreMN)
   sm <- d@modelDF
   y <- d@suppLs$yMCN
@@ -79,20 +80,28 @@ roplsplot <- function(d, plottype = "score", xvar, yvar, hotelling = FALSE, elli
 
   #plotting loadings
   if(plottype == "loading"){
-    p <- ggplot(loading, aes_string(x = xvar, y = yvar)) + geom_point(size = 2)
+    p <- ggplot(loading, aes_string(x = xvar, y = yvar, col = col.var)) + geom_point(size = 2)
     p <- p + xlab(paste(xvar,":", sm[xvar, "R2X"] * 100, "%")) + ylab(paste(yvar,":", sm[yvar, "R2X"] * 100, "%"))
+    p <- p + geom_hline(yintercept = 0, color = "gray") + geom_vline(xintercept = 0, color = "gray")
     }
 
 print(p)
 
 }
 
+#Add scree plot per model, and whether the component is significant, as per modelDF
+#Bar R2Y, Q2, R2X per component and significance
+#Similarity / permutation plot > remake or just use basic plot anyways?
+
+
+
 #Modelcompare
-ropls.modelcompare <- function(...){
-  x <- list(...)
-
-  unlist(x[1])@modelDF["p1","R2Y"]
-
+#if function is used without supplying a comparison > compare metrics in common between supplied variables
+#if function is used with comparison > plot metrics in bar graph (ggplot)
+ropls.modelcompare <- function(..., comparison = "R2Y"){
+  nargs()
+  x = list(...)
+  x[]
 }
 
 
