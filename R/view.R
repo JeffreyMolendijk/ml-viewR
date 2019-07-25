@@ -123,7 +123,7 @@ ropls.enrich <- function(var, var.name, value.name, filterset = FALSE){
   fgsea.set = fgsea.set %>% filter(grepl(filterset,.$set))
   }
 
-  fgsea.set = split(as.character(fgsea.set$Precursor.Ion.Name), fgsea.set$set)
+  fgsea.set = split(as.character(fgsea.set %>% select(!!sym(var.name))), fgsea.set$set)
 
   #This part should work if the previous parts are set correctly
   fgseaRes <- fgsea(pathways = fgsea.set, stats = fgsea.test, minSize=5, maxSize=500, nperm=10000)
@@ -132,8 +132,6 @@ ropls.enrich <- function(var, var.name, value.name, filterset = FALSE){
   return(fgseaRes)
 
 }
-
-#xv = ropls.enrich(var = cbind(s.data %>% select(Precursor.Ion.Name, class, uns, cl), oplsda.sdata.hfd@loadingMN), var.name = "Precursor.Ion.Name", value.name = "p1", filterset = "class")
 
 
 #Modelcompare
