@@ -20,7 +20,6 @@ gg_circle <- function(rx, ry, xc, yc, color="black", fill=NA, ...) {
   annotate("ribbon", x=x, ymin=ymin, ymax=ymax, color=color, fill=fill, ...)
 }
 
-
 #' Produce publication-quality ggplot images of ropls objects.
 #'
 #' `ropls.plot`` produces publication-quality ggplot images of ropls objects.
@@ -89,10 +88,52 @@ print(p)
 
 }
 
-#Add scree plot per model, and whether the component is significant, as per modelDF
-#Bar R2Y, Q2, R2X per component and significance
-#Similarity / permutation plot > remake or just use basic plot anyways?
 
+#' Perform FGSEA enrichment.
+#'
+#' `ropls.enrich`` performs FGSEA enrichment on a dataframe containing variables, variable information and variable scores.
+#' The input of the function is a dataframe with a variable column, one or multiple columns containing variable information and scores.
+#' The variable column may contain non-unique names, but will be filtered for distinct entries.
+#' The variable information may be one or multiple columns, and can be selected using the filterset variable.
+#'
+#' @param var data frame containing a variable column, at least one variable information column, and a score column (e.g. p-value, fold-change, OPLS-DA loading).
+#' @param var.name The name of the variable column in quotes, must match the variable column name exactly (e.g. "Precursor.Ion.Name").
+#' @param value.name The name of the value column in quotes, must match the value column name exactly (e.g. "p-value", "fc" or "p1").
+#' @param filterset If FALSE (default) all sets are used for enrichment, or could be used to use a particular set, matching the name of a variable information column (e.g. "class", "cl", "uns")
+#'
+#' @return A fgsea enrichment result.
+#'   }
+#'
+#' @import dplyr
+#'
+#' @export
+ropls.enrich <- function(var, var.name, value.name, filterset = FALSE){
+  fgsea.test = var %>% dplyr::distinct(!!sym(var.name), .keep_all = TRUE) %>%
+    arrange(-!!sym(value.name)) %>%
+    select(!!sym(var.name), !!sym(value.name)) %>%
+    tibble::deframe()
+
+  fgsea.set = var %>% dplyr::distinct(!!sym(var.name), .keep_all = TRUE) %>%
+    arrange(-!!sym(value.name)) %>%
+    select(-!!sym(value.name)) %>%
+    gather(key = "collection", value = "value", (var %>% select(-!!sym(var.name), -!!sym(value.name)) %>% colnames)) %>%
+    unite("set", collection, value, sep = "_")
+
+  if(filterset != FALSE){
+  fgsea.set = fgsea.set %>% filter(grepl(filterset,.$set))
+  }
+
+  fgsea.set = split(as.character(fgsea.set$Precursor.Ion.Name), fgsea.set$set)
+
+  #This part should work if the previous parts are set correctly
+  fgseaRes <- fgsea(pathways = fgsea.set, stats = fgsea.test, minSize=5, maxSize=500, nperm=10000)
+
+
+  return(fgseaRes)
+
+}
+
+#xv = ropls.enrich(var = cbind(s.data %>% select(Precursor.Ion.Name, class, uns, cl), oplsda.sdata.hfd@loadingMN), var.name = "Precursor.Ion.Name", value.name = "p1", filterset = "class")
 
 
 #Modelcompare
@@ -105,3 +146,6 @@ ropls.modelcompare <- function(..., comparison = "R2Y"){
 }
 
 
+#Add scree plot per model, and whether the component is significant, as per modelDF
+#Bar R2Y, Q2, R2X per component and significance
+#Similarity / permutation plot > remake or just use basic plot anyways?
