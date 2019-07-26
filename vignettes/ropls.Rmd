@@ -14,6 +14,41 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+## mlviewer for ropls models
+The functions in `mlviewer` starting with "ropls" (e.g. ropls.plot, ropls.enrich) can be used to visualize the results from models created using the package `ropls`. To get started we need to load some packages.
+
+```{r setup, message = FALSE}
 library(mlviewer)
+library(ropls)
+library(ggplot2)
+library(dplyr)
+library(fgsea)
+library(rlang)
 ```
+
+The mtcars dataset is used for this example. We will create a PCA, OPLS and OPLS-DA model using `ropls`. 
+To create the PCA model we supply the data matrix, but no y-variable. For the OPLS model we supply a continuous variable ("mpg"), and set the number of predictive and orthogonal components to 1. For the OPLS-DA model we supply a categorical variable with two groups ("am"). Regular PLS and PLS-DA models can be made by setting the number of orthogonal components to 0.
+
+```{r rest}
+#Load mtcars dataset
+data.x = mtcars
+
+#Make models
+ropls.pca = opls(x = mtcars, predI = 2, info.txtC = NULL, fig.pdfC = FALSE)
+ropls.opls = opls(x = mtcars %>% select(-mpg), y = mtcars$mpg, predI = 1, orthoI = 1, info.txtC = NULL, fig.pdfC = FALSE)
+ropls.oplsda = ropls1 = opls(x = mtcars %>% select(-am), y = as.factor(mtcars$am), predI = 1, orthoI = 1, info.txtC = NULL, fig.pdfC = FALSE)
+```
+
+Produce ggplot images of `ropls` models using ropls.plot.
+
+```{r ropls.plot}
+
+#ropls.plot(ropls.pca, xvar = "p1", yvar = "p2", hotelling = TRUE, ellipse = FALSE)
+ropls.plot(ropls.pca, plottype = "loading", xvar = "p1", yvar = "p2", hotelling = TRUE, ellipse = FALSE)
+
+ropls.plot(ropls.opls, xvar = "p1", yvar = "o1", hotelling = TRUE)
+
+ropls.plot(ropls.oplsda, xvar = "p1", yvar = "o1", hotelling = TRUE)
+ropls.plot(ropls.oplsda, xvar = "p1", yvar = "o1", hotelling = TRUE, ellipse = TRUE) + coord_fixed(ratio = 0.5)
+```
+

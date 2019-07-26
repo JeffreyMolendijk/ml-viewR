@@ -11,8 +11,6 @@
 #'
 #' @return a circle.
 #'   }
-#'
-#' @export
 gg_circle <- function(rx, ry, xc, yc, color="black", fill=NA, ...) {
   x <- xc + rx*cos(seq(0, pi, length.out=100))
   ymax <- yc + ry*sin(seq(0, pi, length.out=100))
@@ -41,7 +39,7 @@ gg_circle <- function(rx, ry, xc, yc, color="black", fill=NA, ...) {
 #' @import ggplot2
 #'
 #' @export
-ropls.plot <- function(d, plottype = "score", xvar, yvar, hotelling = FALSE, ellipse = FALSE, col.var = NULL){
+ropls.plot <- function(d, plottype = "score", xvar, yvar, hotelling = FALSE, ellipse = FALSE, col.var = NULL, col.pca = NULL){
   N <- nrow(d@scoreMN)
   sm <- d@modelDF
   y <- d@suppLs$yMCN
@@ -59,7 +57,7 @@ ropls.plot <- function(d, plottype = "score", xvar, yvar, hotelling = FALSE, ell
 
   #plotting scores
   if(plottype == "score"){
-    if(d@typeC == "PCA"){p <- ggplot(score, aes_string(x = xvar, y = yvar)) + geom_point(size = 2)}
+    if(d@typeC == "PCA"){p <- ggplot(score, aes_string(x = xvar, y = yvar, col = col.pca)) + geom_point(size = 2)}
 
     else{p <- ggplot(score, aes_string(x = xvar, y = yvar, col = "y")) + geom_point(size = 2)}
 
@@ -84,8 +82,7 @@ ropls.plot <- function(d, plottype = "score", xvar, yvar, hotelling = FALSE, ell
     p <- p + geom_hline(yintercept = 0, color = "gray") + geom_vline(xintercept = 0, color = "gray")
     }
 
-print(p)
-
+return(p)
 }
 
 
@@ -125,12 +122,9 @@ ropls.enrich <- function(var, var.name, value.name, filterset = FALSE){
 
   fgsea.set = split(as.character(fgsea.set %>% select(!!sym(var.name))), fgsea.set$set)
 
-  #This part should work if the previous parts are set correctly
   fgseaRes <- fgsea(pathways = fgsea.set, stats = fgsea.test, minSize=5, maxSize=500, nperm=10000)
 
-
   return(fgseaRes)
-
 }
 
 

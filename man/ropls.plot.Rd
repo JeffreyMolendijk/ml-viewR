@@ -5,7 +5,7 @@
 \title{Produce publication-quality ggplot images of ropls objects.}
 \usage{
 ropls.plot(d, plottype = "score", xvar, yvar, hotelling = FALSE,
-  ellipse = FALSE, col.var = NULL)
+  ellipse = FALSE, col.var = NULL, col.pca = NULL)
 }
 \arguments{
 \item{d}{ropls object created by [opls()].}
