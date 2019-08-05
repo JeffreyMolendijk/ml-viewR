@@ -105,13 +105,14 @@ return(p)
 #'
 #' @export
 ropls.enrich <- function(var, var.name, value.name, filterset = FALSE){
-  fgsea.test = var %>% dplyr::distinct(!!sym(var.name), .keep_all = TRUE) %>%
-    arrange(-!!sym(value.name)) %>%
+  var.arrange = var %>% dplyr::distinct(!!sym(var.name), .keep_all = TRUE) %>%
+    arrange(-!!sym(value.name))
+
+  fgsea.test = var.arrange %>%
     select(!!sym(var.name), !!sym(value.name)) %>%
     tibble::deframe()
 
-  fgsea.set = var %>% dplyr::distinct(!!sym(var.name), .keep_all = TRUE) %>%
-    arrange(-!!sym(value.name)) %>%
+  fgsea.set = var.arrange %>%
     select(-!!sym(value.name)) %>%
     gather(key = "collection", value = "value", (var %>% select(-!!sym(var.name), -!!sym(value.name)) %>% colnames)) %>%
     unite("set", collection, value, sep = "_")
@@ -120,24 +121,10 @@ ropls.enrich <- function(var, var.name, value.name, filterset = FALSE){
   fgsea.set = fgsea.set %>% filter(grepl(filterset,.$set))
   }
 
-  fgsea.set = split(as.character(fgsea.set %>% select(!!sym(var.name))), fgsea.set$set)
+  fgsea.set = split(fgsea.set %>% select(!!sym(var.name)) %>% as.matrix %>% as.character(), fgsea.set$set)
 
   fgseaRes <- fgsea(pathways = fgsea.set, stats = fgsea.test, minSize=5, maxSize=500, nperm=10000)
 
   return(fgseaRes)
 }
 
-
-#Modelcompare
-#if function is used without supplying a comparison > compare metrics in common between supplied variables
-#if function is used with comparison > plot metrics in bar graph (ggplot)
-ropls.modelcompare <- function(..., comparison = "R2Y"){
-  nargs()
-  x = list(...)
-  x[]
-}
-
-
-#Add scree plot per model, and whether the component is significant, as per modelDF
-#Bar R2Y, Q2, R2X per component and significance
-#Similarity / permutation plot > remake or just use basic plot anyways?
