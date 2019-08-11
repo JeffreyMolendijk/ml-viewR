@@ -1,15 +1,17 @@
 ---
 title: "mlviewer: ropls"
+author:
+- name: Jeffrey Molendijk
+  affiliation: Precision & Systems Biomedicine, QIMR Berghofer, Australia
 output: 
-  rmarkdown::html_vignette: 
+  html_document: 
     toc: true
+runtime: shiny
 vignette: >
   %\VignetteIndexEntry{ropls}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
-# introduction 
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -21,8 +23,31 @@ knitr::opts_chunk$set(
 )
 ```
 
-## mlviewer for ropls models
-The functions in `mlviewer` starting with "ropls" (e.g. ropls.plot, ropls.enrich) can be used to visualize the results from models created using the package `ropls`. To get started we need to load some packages.
+# Introduction 
+ml-viewR is a visualization package for machine learning analyses. The functions in `mlview` are named according to the package which they are to be used with, whereas generic functions start with "mlview.".
+
+### ropls 
+This package contains functions used for visualization of `ropls` objects. 
+`mlview` currently supports all models created by `ropls`, including PCA, PLS, OPLS, PLS-DA and OPLS-DA models. 
+
+The `ropls.plot` function can be used to create score (default) and loading plots. This function allows colour by group and the addition of group ellipses. Hotelling's T2 ellipse can be toggled on or off. The ggplot output from `ropls.plot` can be further modified if required.
+
+The `ropls.enrich` function performs `fgsea` enrichment on a matrix of variables, variable information and a single numeric comlumn. Furthermore, the column(s) used in the enrichment analysis can be specified. This function returns the `fgsea` output, including enriched groups, enrichment scores and p-values.
+
+### mlviewer for ropls models
+The functions in `mlviewer` starting with "ropls" (e.g. ropls.plot, ropls.enrich) can be used to visualize the results from models created using the package `ropls`. 
+
+# Installation
+To install mlviewer from GitHub run the following code:
+
+```{r installation, message = FALSE, warning = FALSE, results = FALSE}
+library(devtools)   
+install_github("JeffreyMolendijk/ml-viewR")
+```
+
+#Analysis example
+### Required libraries
+To get started we need to load some packages.
 
 ```{r setup, message = FALSE, warning = FALSE}
 library(mlviewer)
@@ -32,9 +57,10 @@ library(plotly)
 library(dplyr)
 library(fgsea)
 library(rlang)
+library(shiny)
 ```
 
-## Creating unsupervised and supervised models
+### Creating unsupervised and supervised models
 The mtcars dataset is used for this example. We will create a PCA, OPLS and OPLS-DA model using `ropls`. 
 To create the PCA model we supply the data matrix, but no y-variable. For the OPLS model we supply a continuous variable ("mpg"), and set the number of predictive and orthogonal components to 1. For the OPLS-DA model we supply a categorical variable with two groups ("am"). Regular PLS and PLS-DA models can be made by setting the number of orthogonal components to 0.
 
@@ -49,7 +75,7 @@ ropls.oplsda = ropls1 = opls(x = mtcars %>% select(-am), y = as.factor(mtcars$am
 ```
 
 
-## Visualizing results
+### Visualizing results
 Produce ggplot images of `ropls` models using ropls.plot.
 
 ```{r ropls.plot}
@@ -69,3 +95,35 @@ ropls.plot(ropls.oplsda, xvar = "p1", yvar = "o1", hotelling = TRUE, ellipse = T
 
 ```
 
+### Produce interactive plots
+Combining mlviewer with plotly allows the user to study the individual scores and loadings more easily.
+
+```{r ropls.plot interactive}
+ropls.plot(ropls.oplsda, xvar = "p1", yvar = "o1", hotelling = TRUE, ellipse = TRUE) %>% ggplotly()
+```
+
+```{r ropls.plot shiny}
+# basic example
+shinyApp(
+  ui = fluidPage(
+    selectInput("plot", "Plot:",
+                c("PCA, scoreplot, no colour" = "p1",
+                  "PCA, scoreplot, continuous colour" = "p2",
+                  "PCA, scoreplot, categorical colour" = "p3")),
+    plotOutput('plot')
+  ),
+  server = function(input, output) {
+
+    output$plot <- renderPlot({
+      if (input$plot == "p1") {
+      ropls.plot(ropls.pca, xvar = "p1", yvar = "p2", hotelling = TRUE, ellipse = FALSE)
+    } else if (input$plot == "p2") {
+      ropls.plot(ropls.pca, xvar = "p1", yvar = "p2", hotelling = TRUE, ellipse = FALSE, col.pca = data.x$mpg)
+    } else if (input$plot == "p3") {
+      ropls.plot(ropls.pca, xvar = "p1", yvar = "p2", hotelling = TRUE, ellipse = FALSE, col.pca = as.factor(data.x$am))
+    }
+    })
+
+  }
+)
+```
