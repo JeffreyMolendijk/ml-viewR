@@ -102,7 +102,10 @@ Combining mlviewer with plotly allows the user to study the individual scores an
 ropls.plot(ropls.oplsda, xvar = "p1", yvar = "o1", hotelling = TRUE, ellipse = TRUE) %>% ggplotly()
 ```
 
-```{r ropls.plot shiny}
+# Shiny results 
+
+
+```{r ropls.plot shiny, echo = FALSE}
 # basic example
 shinyApp(
   ui = fluidPage(
