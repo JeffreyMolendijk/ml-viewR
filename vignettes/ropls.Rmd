@@ -1,27 +1,34 @@
 ---
-title: "ropls"
-output: rmarkdown::html_vignette
+title: "mlviewer: ropls"
+output: 
+  rmarkdown::html_vignette: 
+    toc: true
 vignette: >
   %\VignetteIndexEntry{ropls}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
+# introduction 
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   dev = 'svg',
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
 )
 ```
 
 ## mlviewer for ropls models
 The functions in `mlviewer` starting with "ropls" (e.g. ropls.plot, ropls.enrich) can be used to visualize the results from models created using the package `ropls`. To get started we need to load some packages.
 
-```{r setup, message = FALSE}
+```{r setup, message = FALSE, warning = FALSE}
 library(mlviewer)
 library(ropls)
 library(ggplot2)
+library(plotly)
 library(dplyr)
 library(fgsea)
 library(rlang)
@@ -45,7 +52,7 @@ ropls.oplsda = ropls1 = opls(x = mtcars %>% select(-am), y = as.factor(mtcars$am
 ## Visualizing results
 Produce ggplot images of `ropls` models using ropls.plot.
 
-```{r ropls.plot, out.height 250, out.width = 700}
+```{r ropls.plot}
 ropls.plot(ropls.pca, xvar = "p1", yvar = "p2", hotelling = TRUE, ellipse = FALSE)
 ropls.plot(ropls.pca, xvar = "p1", yvar = "p2", hotelling = TRUE, ellipse = FALSE, col.pca = data.x$mpg)
 ropls.plot(ropls.pca, xvar = "p1", yvar = "p2", hotelling = TRUE, ellipse = FALSE, col.pca = as.factor(data.x$am))
@@ -57,5 +64,8 @@ ropls.plot(ropls.opls, xvar = "p1", yvar = "o1", hotelling = TRUE, plottype = "l
 
 ropls.plot(ropls.oplsda, xvar = "p1", yvar = "o1", hotelling = TRUE)
 ropls.plot(ropls.oplsda, xvar = "p1", yvar = "o1", hotelling = TRUE, ellipse = TRUE) 
+
+ropls.plot(ropls.oplsda, xvar = "p1", yvar = "o1", hotelling = TRUE, ellipse = TRUE) %>% ggplotly()
+
 ```
 

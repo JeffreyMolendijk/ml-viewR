@@ -1,3 +1,6 @@
+# Function to plot a circle in ggplot
+# Adapted from https://github.com/tyrannomark/bldR/blob/master/R/L2017.R
+# GPL-3 license
 #' Function to add circles and ellipses to ggplot images.
 #'
 #' `gg_circle`` produces circles and ellipses that can be added to ggplot images.
