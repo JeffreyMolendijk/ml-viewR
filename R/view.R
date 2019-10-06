@@ -131,3 +131,25 @@ ropls.enrich <- function(var, var.name, value.name, filterset = FALSE){
   return(fgseaRes)
 }
 
+
+
+#' Compare ropls models
+#'
+#' `ropls.modelcompare`` compares ropls models of the same type
+#'
+#' @param ... models
+#'
+#' @return A comparison
+#'   }
+#'
+#' @import dplyr
+#'
+#' @export
+ropls.modelcompare <- function(...){
+  arguments <- list(...)
+paste(arguments[1])
+}
+
+ropls.modelcompare(ropls.opls, ropls.oplsda)
+ropls.modelcompare("ropls.opls", "ropls.oplsda")
+
